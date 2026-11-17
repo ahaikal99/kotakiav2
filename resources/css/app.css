@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views';
+@source inline("{bg,text,border,border-l}-{emerald,amber,rose,sky,stone}-{50,100,200,500,600,700}");
+
+@theme {
+    --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    --font-serif: 'Cormorant Garamond', ui-serif, Georgia, serif;
+    --font-script: 'Great Vibes', cursive;
+
+    --color-gold-50: #fbf7ee;
+    --color-gold-100: #f5ebd3;
+    --color-gold-200: #ead5a6;
+    --color-gold-300: #ddbb73;
+    --color-gold-400: #d0a352;
+    --color-gold-500: #b98b3b;
+    --color-gold-600: #9c7130;
+    --color-gold-700: #7d5729;
+    --color-gold-800: #684727;
+    --color-gold-900: #583c24;
+
+    --color-ink: #1f1a14;
+    --color-cream: #faf6ee;
+}
+
+@layer base {
+    body {
+        @apply bg-cream text-stone-800 antialiased;
+    }
+    [x-cloak] { display: none !important; }
+}
+
+@layer components {
+    .btn, .btn-primary, .btn-dark, .btn-outline, .btn-ghost, .btn-danger {
+        @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 disabled:opacity-50 cursor-pointer;
+    }
+    .btn-primary { @apply bg-gold-500 text-white shadow-sm shadow-gold-700/20 hover:bg-gold-600; }
+    .btn-dark { @apply bg-ink text-gold-100 hover:bg-stone-800; }
+    .btn-outline { @apply border border-gold-300 bg-white text-gold-800 hover:bg-gold-50; }
+    .btn-ghost { @apply text-stone-600 hover:bg-stone-100; }
+    .btn-danger { @apply bg-rose-600 text-white hover:bg-rose-700; }
+    .btn-sm { @apply px-3.5 py-1.5 text-xs; }
+
+    .card { @apply rounded-2xl border border-stone-200/70 bg-white shadow-sm; }
+
+    .label { @apply mb-1.5 block text-sm font-medium text-stone-700; }
+    .input {
+        @apply block w-full rounded-xl border border-stone-300 bg-white px-3.5 py-2.5 text-sm text-stone-800 shadow-sm
+            placeholder:text-stone-400 focus:border-gold-400 focus:ring-2 focus:ring-gold-200 focus:outline-none;
+    }
+    .input-error { @apply border-rose-400 focus:border-rose-400 focus:ring-rose-100; }
+    .hint { @apply mt-1 text-xs text-stone-500; }
+    .error { @apply mt-1 text-xs text-rose-600; }
+
+    .badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium; }
+
+    .table-base { @apply min-w-full divide-y divide-stone-200 text-sm; }
+    .table-base th { @apply bg-stone-50 px-4 py-3 text-left text-xs font-semibold tracking-wide text-stone-500 uppercase; }
+    .table-base td { @apply px-4 py-3 align-middle text-stone-700; }
+    .table-base tbody tr { @apply hover:bg-gold-50/40; }
+
+    .nav-link {
+        @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-stone-300 transition hover:bg-white/5 hover:text-white;
+    }
+    .nav-link.active { @apply bg-gold-500/15 text-gold-200; }
+
+    .section-title { @apply font-serif text-2xl font-semibold text-stone-900; }
+}
+
+/* Corak geometri latar (dari logo) */
+.pattern-geo {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%23b98b3b' stroke-opacity='.12' stroke-width='1.5'%3E%3Cpath d='M30 4 56 30 30 56 4 30Z'/%3E%3Cpath d='M30 16 44 30 30 44 16 30Z'/%3E%3C/g%3E%3C/svg%3E");
+}

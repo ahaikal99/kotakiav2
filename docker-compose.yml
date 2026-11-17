@@ -1,0 +1,81 @@
+name: kotakia
+
+services:
+  app:
+    build:
+      context: ./docker/php
+    container_name: kotakia-app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    environment:
+      RUN_MIGRATIONS: "true"
+      RUN_SEEDERS: "true"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: [kotakia]
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: kotakia-nginx
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on: [app]
+    networks: [kotakia]
+
+  mysql:
+    image: mysql:8.4
+    container_name: kotakia-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-kotakia}
+      MYSQL_USER: ${DB_USERNAME:-kotakia}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+      TZ: Asia/Kuala_Lumpur
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "${DB_FORWARD_PORT:-3307}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [kotakia]
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    container_name: kotakia-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "${PMA_PORT:-8082}:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 64M
+    depends_on: [mysql]
+    networks: [kotakia]
+
+  node:
+    image: node:22-alpine
+    container_name: kotakia-node
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    command: sh -c "npm install && npm run build"
+    profiles: ["assets"]
+    networks: [kotakia]
+
+networks:
+  kotakia:
+
+volumes:
+  mysql-data:
